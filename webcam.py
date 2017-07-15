@@ -52,7 +52,7 @@ def show_piCam(model, emoticons, window_size=None, window_name='PiCam', update_t
         # printInfo('frame captured')
         count = 0
         for normalized_face, (x, y, w, h) in find_faces(image):
-            emotion = {}
+            emotion = []
             # printInfo("face found")
             count += 1
             prediction = model.predict(normalized_face)  # do prediction
@@ -61,16 +61,16 @@ def show_piCam(model, emoticons, window_size=None, window_name='PiCam', update_t
                 prediction = prediction[0]
 
             # print "Found {0} face is {1}".format(count,emotions[prediction])
-            emotion["face"] = count
-            emotion["emotion"] = emotions[prediction]
-            emotion["timestamp"] = str(datetime.datetime.now())
+            emotion.append("face {}".format(count))
+            emotion.append(emotions[prediction])
+            emotion.append("{0}".format(datetime.datetime.now()))
+            # emotion["emotion"] = emotions[prediction]
+            # emotion["timestamp"] = str(datetime.datetime.now())
             # print emotions[prediction]
             # image_to_draw = emoticons[prediction]
             # image.setflags(write=1)
             # draw_with_alpha(image, image_to_draw, (x, y, w, h))
             faces.append(emotion)
-            if len(faces):
-                print len(faces)
 
         # campaign.append(faces)
         cv2.imshow("Frame", image)
@@ -86,6 +86,7 @@ def show_piCam(model, emoticons, window_size=None, window_name='PiCam', update_t
         # if the `q` key was pressed, break from the loop
         if key == ord("q"):
             spread_sheet.insert(values=faces)
+            # print faces
             break
 
 

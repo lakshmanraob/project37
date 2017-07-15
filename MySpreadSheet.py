@@ -72,14 +72,11 @@ class SpreadSheet:
         return credentials
 
     def insert(self, values):
-        self.insert(spread_sheet_id=self.spreadsheetId, values=values)
-
-    def insert(self, spread_sheet_id, values):
-
+        
         body = {'values': values}
         rg = 'A1'
 
-        self.service.spreadsheets().values().append(spreadsheetId=spread_sheet_id, range=rg, body=body,
+        self.service.spreadsheets().values().append(spreadsheetId=self.spreadsheetId, range=rg, body=body,
                                                     valueInputOption='RAW').execute()
         # values = result.get('values', [])
 
@@ -115,5 +112,5 @@ def create_values():
 if __name__ == '__main__':
     speread_sheet = SpreadSheet()
     spread_sheet_id = '1M-yIErYwdln-X9VWGKOrykz_B1oBR3b9nHIuD9xyeOs'
-    speread_sheet.insert(spread_sheet_id=spread_sheet_id, values=create_values())
+    speread_sheet.insert(values=create_values())
     # main()
