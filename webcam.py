@@ -12,6 +12,8 @@ from picamera import PiCamera
 import time
 import datetime
 
+import MySpreadSheet
+
 
 def _load_emoticons(emotions):
     """
@@ -21,21 +23,24 @@ def _load_emoticons(emotions):
     """
     return [nparray_as_image(cv2.imread('graphics/%s.png' % emotion, -1), mode=None) for emotion in emotions]
 
-def printInfo(val):
-    print val
 
-def show_piCam(model, emoticons,window_size=None,window_name='PiCam', update_time=10):
+def printInfo(val):
+    print
+    val
+
+
+def show_piCam(model, emoticons, window_size=None, window_name='PiCam', update_time=10):
     printInfo('showing pi cam')
 
-    campaign = []
+    # campaign = []
     faces = []
     emotion = {}
-    
+
     camera = PiCamera()
     camera.resolution = (640, 480)
-    camera.framerate=32
+    camera.framerate = 32
     rawCapture = PiRGBArray(camera, size=(640, 480))
-    #allow the camera to warm up
+    # allow the camera to warm up
     time.sleep(0.1)
 
     # capture frames from the camera
@@ -47,25 +52,27 @@ def show_piCam(model, emoticons,window_size=None,window_name='PiCam', update_tim
         # printInfo('frame captured')
         count = 0
         for normalized_face, (x, y, w, h) in find_faces(image):
-            emotion={}
-            #printInfo("face found")
-            count +=1
+            emotion = {}
+            # printInfo("face found")
+            count += 1
             prediction = model.predict(normalized_face)  # do prediction
             if cv2.__version__ != '3.1.0':
                 print(prediction)
                 prediction = prediction[0]
 
-            #print "Found {0} face is {1}".format(count,emotions[prediction])
+            # print "Found {0} face is {1}".format(count,emotions[prediction])
             emotion["face"] = count
-            emotion["emotion"]=emotions[prediction]
-            emotion["timestamp"]=str(datetime.datetime.now())
-            #print emotions[prediction]
-            #image_to_draw = emoticons[prediction]
-            #image.setflags(write=1)
-            #draw_with_alpha(image, image_to_draw, (x, y, w, h))
+            emotion["emotion"] = emotions[prediction]
+            emotion["timestamp"] = str(datetime.datetime.now())
+            # print emotions[prediction]
+            # image_to_draw = emoticons[prediction]
+            # image.setflags(write=1)
+            # draw_with_alpha(image, image_to_draw, (x, y, w, h))
             faces.append(emotion)
-            
-        campaign.append(faces)
+            if len(faces):
+                print len(faces)
+
+        # campaign.append(faces)
         cv2.imshow("Frame", image)
         # read_value, webcam_image = vc.read()
         image = frame.array
@@ -78,10 +85,8 @@ def show_piCam(model, emoticons,window_size=None,window_name='PiCam', update_tim
 
         # if the `q` key was pressed, break from the loop
         if key == ord("q"):
-            print faces
+            spread_sheet.insert(values=faces)
             break
-
-
 
 
 def show_webcam_and_run(model, emoticons, window_size=None, window_name='webcam', update_time=10):
@@ -127,6 +132,8 @@ def show_webcam_and_run(model, emoticons, window_size=None, window_name='webcam'
 if __name__ == '__main__':
     emotions = ['neutral', 'anger', 'disgust', 'happy', 'sadness', 'surprise']
     emoticons = _load_emoticons(emotions)
+
+    spread_sheet = MySpreadSheet.SpreadSheet()
 
     # load model
     if cv2.__version__ == '3.1.0':
