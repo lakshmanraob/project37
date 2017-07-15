@@ -21,7 +21,7 @@ class SpreadSheet:
         # If modifying these scopes, delete your previously saved credentials
         # at ~/.credentials/sheets.googleapis.com-python-quickstart.json
         self.SCOPES = 'https://www.googleapis.com/auth/spreadsheets'
-        self.CLIENT_SECRET_FILE = 'client_secret.json'
+        self.CLIENT_SECRET_FILE = 'credentials/client_secret.json'
         self.APPLICATION_NAME = 'Google Sheets API Python Quickstart'
 
         """Shows basic usage of the Sheets API.
