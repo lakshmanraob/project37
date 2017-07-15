@@ -14,6 +14,8 @@ import datetime
 
 import MySpreadSheet
 
+from threading import Thread
+
 
 def _load_emoticons(emotions):
     """
@@ -72,7 +74,8 @@ def show_piCam(model, emoticons, window_size=None, window_name='PiCam', update_t
 
             # for updating the emotions to spreadSheet
             if len(emotion) % 100 == 0 :
-                spread_sheet.insert(values=faces)
+                t = Thread(target=update_sheet,args=faces)
+                t.start()
                 faces = []
 
         # campaign.append(faces)
@@ -92,6 +95,8 @@ def show_piCam(model, emoticons, window_size=None, window_name='PiCam', update_t
             # print faces
             break
 
+def update_sheet(faces):
+    spread_sheet.insert(values=faces)
 
 def show_webcam_and_run(model, emoticons, window_size=None, window_name='webcam', update_time=10):
     """
