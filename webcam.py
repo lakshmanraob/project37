@@ -32,9 +32,7 @@ def printInfo(val):
 def show_piCam(model, emoticons, window_size=None, window_name='PiCam', update_time=10):
     printInfo('showing pi cam')
 
-    # campaign = []
     faces = []
-    emotion = {}
 
     camera = PiCamera()
     camera.resolution = (640, 480)
@@ -72,6 +70,11 @@ def show_piCam(model, emoticons, window_size=None, window_name='PiCam', update_t
             # draw_with_alpha(image, image_to_draw, (x, y, w, h))
             faces.append(emotion)
 
+            # for updating the emotions to spreadSheet
+            if len(emotion) % 100 == 0 :
+                spread_sheet.insert(values=faces)
+                faces = []
+
         # campaign.append(faces)
         cv2.imshow("Frame", image)
         # read_value, webcam_image = vc.read()
@@ -85,7 +88,7 @@ def show_piCam(model, emoticons, window_size=None, window_name='PiCam', update_t
 
         # if the `q` key was pressed, break from the loop
         if key == ord("q"):
-            spread_sheet.insert(values=faces)
+            # spread_sheet.insert(values=faces)
             # print faces
             break
 
