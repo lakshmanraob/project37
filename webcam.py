@@ -13,8 +13,11 @@ import time
 import datetime
 
 import MySpreadSheet
+import MyAwsIOT
 
 from threading import Thread
+
+import uuid
 
 
 def _load_emoticons(emotions):
@@ -27,8 +30,7 @@ def _load_emoticons(emotions):
 
 
 def printInfo(val):
-    print
-    val
+    print val
 
 
 def show_piCam(model, emoticons, window_size=None, window_name='PiCam', update_time=10):
@@ -98,6 +100,11 @@ def show_piCam(model, emoticons, window_size=None, window_name='PiCam', update_t
 def update_sheet(faces):
     spread_sheet.insert(values=faces)
 
+def getEmotion(face, emotion, timestamp):
+    myId = uuid.uuid4()
+    emotion = '{ "id": "' + str(myId) + '","face": ' + face + ',"emotion": ' + emotion + ',"timestamp": "' + timestamp + '" }'
+    return emotion
+
 def show_webcam_and_run(model, emoticons, window_size=None, window_name='webcam', update_time=10):
     """
     Shows webcam image, detects faces and its emotions in real time and draw emoticons over those faces.
@@ -143,6 +150,10 @@ if __name__ == '__main__':
     emoticons = _load_emoticons(emotions)
 
     spread_sheet = MySpreadSheet.SpreadSheet()
+
+    # AWS IOT class initialization
+    awsIot = MyAwsIOT.AwsUpdate()
+
 
     # load model
     if cv2.__version__ == '3.1.0':
