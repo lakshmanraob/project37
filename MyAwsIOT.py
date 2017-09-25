@@ -1,13 +1,14 @@
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 
 class AwsUpdate:
-    def __init__(self, certificatePath, topic):
-        CERTIFICATE_PATH = certificatePath
-        # '/Users/labattula/Documents/lakshman/certificate/'
+    def __init__(self):
+        topic = 'myPi/Info'
+        # CERTIFICATE_PATH = '/Users/labattula/Documents/lakshman/certificate/'
+        CERTIFICATE_PATH = '/home/pi/Documents/lakshman/project37/awsiotcerts/'
 
-        CA_PATH = CERTIFICATE_PATH + "rootca.pem"
-        PRIVATE_KEY = CERTIFICATE_PATH + "00faeb520f-private.pem.key"
-        CERTIFICATE = CERTIFICATE_PATH + "00faeb520f-certificate.pem.crt"
+        CA_PATH = CERTIFICATE_PATH + "rootCA.pem"
+        PRIVATE_KEY = CERTIFICATE_PATH + "7a78a63189-private.pem.key"
+        CERTIFICATE = CERTIFICATE_PATH + "7a78a63189-certificate.pem.crt"
 
         self.SUBSCRIBE_TOPIC_NAME = topic
 

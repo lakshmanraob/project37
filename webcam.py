@@ -12,7 +12,8 @@ from picamera import PiCamera
 import time
 import datetime
 
-import MySpreadSheet
+
+# import MySpreadSheet
 import MyAwsIOT
 
 from threading import Thread
@@ -75,10 +76,14 @@ def show_piCam(model, emoticons, window_size=None, window_name='PiCam', update_t
             faces.append(emotion)
 
             # for updating the emotions to spreadSheet
-            if len(emotion) % 100 == 0 :
-                t = Thread(target=update_sheet,args=faces)
-                t.start()
+            if len(faces) % 20 == 0 :
+                # t = Thread(target=update_sheet,args=faces)
+                # t.run()
+                awsIot.publish(faces,'myPi/Info');
+                print faces
                 faces = []
+            else:
+                print len(faces)
 
         # campaign.append(faces)
         cv2.imshow("Frame", image)
@@ -147,13 +152,15 @@ def show_webcam_and_run(model, emoticons, window_size=None, window_name='webcam'
 
 if __name__ == '__main__':
     emotions = ['neutral', 'anger', 'disgust', 'happy', 'sadness', 'surprise']
+    print "loading emotions"
     emoticons = _load_emoticons(emotions)
-
-    spread_sheet = MySpreadSheet.SpreadSheet()
+    print "intializing AWS IOT"
+    # spread_sheet = MySpreadSheet.SpreadSheet()
 
     # AWS IOT class initialization
     awsIot = MyAwsIOT.AwsUpdate()
-
+        
+    print "connected to aws IOT"
 
     # load model
     if cv2.__version__ == '3.1.0':
