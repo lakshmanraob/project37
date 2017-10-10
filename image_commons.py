@@ -4,10 +4,10 @@ This module contains functions used to manipulate images in OpenCV and PIL's Ima
 import cv2
 import numpy as np
 
-if cv2.__version__ == '3.1.0':
-    from PIL import Image
-else:
-    import Image
+#if cv2.__version__ == '3.1.0':
+from PIL import Image
+#else:
+#    import Image
 
 
 def image_as_nparray(image):
@@ -50,5 +50,5 @@ def draw_with_alpha(source_image, image_to_draw, coordinates):
     image_to_draw = image_to_draw.resize((h, w), Image.ANTIALIAS)
     image_array = image_as_nparray(image_to_draw)
     for c in range(0, 3):
-        source_image[y:y + h, x:x + w, c] = image_array[:, :, c] * (image_array[:, :, 3] / 255.0) \
-                                            + source_image[y:y + h, x:x + w, c] * (1.0 - image_array[:, :, 3] / 255.0)
+        source_image[y:y + h, x:x + w, c] = image_array[:, :, c] * (image_array[:, :, 2] / 255.0) \
+                                            + source_image[y:y + h, x:x + w, c] * (1.0 - image_array[:, :, 2] / 255.0)
