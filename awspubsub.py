@@ -46,8 +46,8 @@ def customCallback(client, userdata, message):
 host = "a2xx4li8e6ncyj.iot.us-east-1.amazonaws.com"
 FILE_PATH = "/Users/labattula/Documents/lakshman/Personal Folders/pythonWork/project37/awsiotcerts/"
 rootCAPath = FILE_PATH + "rootCA.pem"
-certificatePath = FILE_PATH + "1788784993-certificate.pem.crt"
-privateKeyPath = FILE_PATH + "1788784993-private.pem.key"
+certificatePath = FILE_PATH + "0ff167ddc8-certificate.pem.crt"
+privateKeyPath = FILE_PATH + "0ff167ddc8-private.pem.key"
 useWebsocket = 8883
 clientId = "basicPubSub"
 topic = "faces"
