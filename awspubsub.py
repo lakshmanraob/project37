@@ -18,7 +18,6 @@
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 import logging
 import time
-import argparse
 
 
 # Custom MQTT message callback
@@ -30,35 +29,15 @@ def customCallback(client, userdata, message):
     print("--------------\n\n")
 
 
-# Read in command-line parameters
-# parser = argparse.ArgumentParser()
-# parser.add_argument("-e", "--endpoint", action="store", required=True, dest="host", help="a2xx4li8e6ncyj.iot.us-east-1.amazonaws.com")
-# parser.add_argument("-r", "--rootCA", action="store", required=True, dest="rootCAPath", help="Root CA file path")
-# parser.add_argument("-c", "--cert", action="store", dest="certificatePath", help="Certificate file path")
-# parser.add_argument("-k", "--key", action="store", dest="privateKeyPath", help="Private key file path")
-# parser.add_argument("-w", "--websocket", action="store_true", dest="useWebsocket", default=False,
-#                     help="Use MQTT over WebSocket")
-# parser.add_argument("-id", "--clientId", action="store", dest="clientId", default="basicPubSub",
-#                     help="Targeted client id")
-# parser.add_argument("-t", "--topic", action="store", dest="topic", default="sdk/test/Python", help="Targeted topic")
-#
-# args = parser.parse_args()
-host = "a2xx4li8e6ncyj.iot.us-east-1.amazonaws.com"
 FILE_PATH = "/Users/labattula/Documents/lakshman/Personal Folders/pythonWork/project37/awsiotcerts/"
-rootCAPath = FILE_PATH + "rootCA.pem"
-certificatePath = FILE_PATH + "0ff167ddc8-certificate.pem.crt"
-privateKeyPath = FILE_PATH + "0ff167ddc8-private.pem.key"
+
+host = "a2xx4li8e6ncyj.iot.us-east-1.amazonaws.com"
+rootCAPath = FILE_PATH+"rootCA.pem"
+certificatePath = FILE_PATH+"a128c1ebd8-certificate.pem.crt"
+privateKeyPath = FILE_PATH+"a128c1ebd8-private.pem.key"
 useWebsocket = 8883
 clientId = "basicPubSub"
 topic = "faces"
-
-# if args.useWebsocket and args.certificatePath and args.privateKeyPath:
-#     parser.error("X.509 cert authentication and WebSocket are mutual exclusive. Please pick one.")
-#     exit(2)
-#
-# if not args.useWebsocket and (not args.certificatePath or not args.privateKeyPath):
-#     parser.error("Missing credentials for authentication.")
-#     exit(2)
 
 # Configure logging
 logger = logging.getLogger("AWSIoTPythonSDK.core")
@@ -69,15 +48,15 @@ streamHandler.setFormatter(formatter)
 logger.addHandler(streamHandler)
 
 # Init AWSIoTMQTTClient
-# myAWSIoTMQTTClient = None
-# if useWebsocket:
-#     myAWSIoTMQTTClient = AWSIoTMQTTClient(clientId, useWebsocket=True)
-#     myAWSIoTMQTTClient.configureEndpoint(host, 443)
-#     myAWSIoTMQTTClient.configureCredentials(rootCAPath)
-# else:
-myAWSIoTMQTTClient = AWSIoTMQTTClient(clientId)
-myAWSIoTMQTTClient.configureEndpoint(host, 8883)
-myAWSIoTMQTTClient.configureCredentials(rootCAPath, privateKeyPath, certificatePath)
+myAWSIoTMQTTClient = None
+if useWebsocket:
+    myAWSIoTMQTTClient = AWSIoTMQTTClient(clientId, useWebsocket=True)
+    myAWSIoTMQTTClient.configureEndpoint(host, 443)
+    myAWSIoTMQTTClient.configureCredentials(rootCAPath)
+else:
+    myAWSIoTMQTTClient = AWSIoTMQTTClient(clientId)
+    myAWSIoTMQTTClient.configureEndpoint(host, 8883)
+    myAWSIoTMQTTClient.configureCredentials(rootCAPath, privateKeyPath, certificatePath)
 
 # AWSIoTMQTTClient connection configuration
 myAWSIoTMQTTClient.configureAutoReconnectBackoffTime(1, 32, 20)

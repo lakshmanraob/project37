@@ -142,15 +142,15 @@ def show_webcam_and_run(model, emoticons, window_size=None, window_name='webcam'
     # privateKeyPath = FILE_PATH + "1788784993-private.pem.key"
     # certificatePath = FILE_PATH + "1788784993-certificate.pem.crt"
     rootCAPath = get_pattern(FILE_PATH, '*.pem')
-    certificatePath = get_pattern(FILE_PATH, pattern='*-certificate.pem.crt')
-    privateKeyPath = get_pattern(FILE_PATH, pattern='*-private.pem.key')
-    useWebsocket = 8883
+    # certificatePath = get_pattern(FILE_PATH, pattern='*-certificate.pem.crt')
+    # privateKeyPath = get_pattern(FILE_PATH, pattern='*-private.pem.key')
+    # useWebsocket = 8883
     clientId = "basicPubSub"
     topic = "faces"
 
-    myAWSIoTMQTTClient = AWSIoTMQTTClient(clientId)
-    myAWSIoTMQTTClient.configureEndpoint(host, useWebsocket)
-    myAWSIoTMQTTClient.configureCredentials(rootCAPath, privateKeyPath, certificatePath)
+    myAWSIoTMQTTClient = AWSIoTMQTTClient(clientId, useWebsocket=True)
+    myAWSIoTMQTTClient.configureEndpoint(host, 443)
+    myAWSIoTMQTTClient.configureCredentials(rootCAPath)
 
     # AWSIoTMQTTClient connection configuration
     myAWSIoTMQTTClient.configureAutoReconnectBackoffTime(1, 32, 20)
@@ -161,6 +161,7 @@ def show_webcam_and_run(model, emoticons, window_size=None, window_name='webcam'
 
     # Connect and subscribe to AWS IoT
     myAWSIoTMQTTClient.connect()
+    time.sleep(2)
 
     cv2.namedWindow(window_name, WINDOW_NORMAL)
     if window_size:
@@ -190,7 +191,7 @@ def show_webcam_and_run(model, emoticons, window_size=None, window_name='webcam'
             count += 1
             faces.append(face_emotion)
 
-        if len(faces) % 5 == 0:
+        if len(faces) > 0 and len(faces) % 5 == 0:
             printInfo(faces)
             # awsIot.publish(''.join(str(e) for e in faces), 'faces')
             myAWSIoTMQTTClient.publish(topic, ''.join(str(e) for e in faces), 1)
