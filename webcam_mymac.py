@@ -23,6 +23,7 @@ from threading import Thread
 import glob
 
 import uuid
+import json
 
 
 def get_pattern(directory, pattern):
@@ -194,7 +195,10 @@ def show_webcam_and_run(model, emoticons, window_size=None, window_name='webcam'
         if len(faces) > 0 and len(faces) % 5 == 0:
             printInfo(faces)
             # awsIot.publish(''.join(str(e) for e in faces), 'faces')
-            myAWSIoTMQTTClient.publish(topic, ''.join(str(e) for e in faces), 1)
+            data = {}
+            data['faces'] = ''.join(str(e) for e in faces)
+            print(json.dumps(data))
+            myAWSIoTMQTTClient.publish(topic, json.dumps(data), 1)
             faces = []
         else:
             printInfo(len(faces))

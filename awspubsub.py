@@ -18,6 +18,8 @@
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 import logging
 import time
+import json
+import argparse
 
 
 # Custom MQTT message callback
@@ -29,15 +31,35 @@ def customCallback(client, userdata, message):
     print("--------------\n\n")
 
 
-FILE_PATH = "/Users/labattula/Documents/lakshman/Personal Folders/pythonWork/project37/awsiotcerts/"
+# Read in command-line parameters
+# parser = argparse.ArgumentParser()
+# parser.add_argument("-e", "--endpoint", action="store", required=True, dest="host", help="Your AWS IoT custom endpoint")
+# parser.add_argument("-r", "--rootCA", action="store", required=True, dest="rootCAPath", help="Root CA file path")
+# parser.add_argument("-c", "--cert", action="store", dest="certificatePath", help="Certificate file path")
+# parser.add_argument("-k", "--key", action="store", dest="privateKeyPath", help="Private key file path")
+# parser.add_argument("-w", "--websocket", action="store_true", dest="useWebsocket", default=False,
+#                     help="Use MQTT over WebSocket")
+# parser.add_argument("-id", "--clientId", action="store", dest="clientId", default="basicPubSub",
+#                     help="Targeted client id")
+# parser.add_argument("-t", "--topic", action="store", dest="topic", default="sdk/test/Python", help="Targeted topic")
 
+# args = parser.parse_args()
+FILE_PATH = "/Users/labattula/Documents/lakshman/Personal Folders/pythonWork/project37/awsiotcerts/"
 host = "a2xx4li8e6ncyj.iot.us-east-1.amazonaws.com"
 rootCAPath = FILE_PATH+"rootCA.pem"
-certificatePath = FILE_PATH+"a128c1ebd8-certificate.pem.crt"
-privateKeyPath = FILE_PATH+"a128c1ebd8-private.pem.key"
+certificatePath = FILE_PATH+"8ae9804957-certificate.pem.crt"
+privateKeyPath = FILE_PATH+"8ae9804957-private.pem.key"
 useWebsocket = 8883
 clientId = "basicPubSub"
-topic = "faces"
+topic = "sample"
+
+# if args.useWebsocket and args.certificatePath and args.privateKeyPath:
+#     parser.error("X.509 cert authentication and WebSocket are mutual exclusive. Please pick one.")
+#     exit(2)
+#
+# if not args.useWebsocket and (not args.certificatePath or not args.privateKeyPath):
+#     parser.error("Missing credentials for authentication.")
+#     exit(2)
 
 # Configure logging
 logger = logging.getLogger("AWSIoTPythonSDK.core")
@@ -73,6 +95,8 @@ time.sleep(2)
 # Publish to the same topic in a loop forever
 loopCount = 0
 while True:
-    myAWSIoTMQTTClient.publish(topic, "New Message " + str(loopCount), 1)
+    data = {}
+    data['New Message'] = str(loopCount)
+    myAWSIoTMQTTClient.publish(topic, json.dumps(data), 1)
     loopCount += 1
     time.sleep(1)
